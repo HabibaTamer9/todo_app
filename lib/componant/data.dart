@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class TaskData extends ChangeNotifier{
   static bool selection = false;
@@ -43,8 +44,21 @@ class TaskData extends ChangeNotifier{
     notifyListeners();
   }
 
-  void Delete(int index){
+  Delete(int index){
     tasks.removeAt(index);
+    notifyListeners();
+  }
+
+  sortData(){
+    final dateFormat = DateFormat('d MMM yyyy');
+
+    tasks.sort((a, b) {
+      DateTime dateA = dateFormat.parse(a['date']);
+      DateTime dateB = dateFormat.parse(b['date']);
+
+      return dateA.compareTo(dateB);
+      // return dateB.compareTo(dateA);
+    });
     notifyListeners();
   }
 }

@@ -56,18 +56,7 @@ class _HomeState extends State<Home> {
                                     //sort
                                     PopupMenuItem(
                                         onTap: (){
-                                          setState(() {
-                                            final dateFormat = DateFormat('d-M-yyyy'); // حسب تنسيق التاريخ
-
-                                            TaskData.tasks.sort((a, b) {
-                                              DateTime dateA = dateFormat.parse(a['date']);
-                                              DateTime dateB = dateFormat.parse(b['date']);
-
-                                              return dateA.compareTo(dateB);
-                                              // return dateB.compareTo(dateA);
-                                            });
-
-                                          });
+                                          context.read<TaskData>().sortData();
                                         },
                                         child: Row(
                                           children: [
