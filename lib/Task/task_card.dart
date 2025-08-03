@@ -12,12 +12,12 @@ class TaskCard extends StatefulWidget {
 }
 
 class _TaskCardState extends State<TaskCard> {
-  List task = TaskData.tasks;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<TaskData>(
       builder: (context , notes , child){
-        return  Container(
+        return  SizedBox(
           height: MediaQuery.of(context).size.height*0.8,
           child: ListView.builder(
               itemCount: TaskData.tasks.length,

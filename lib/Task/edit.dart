@@ -23,6 +23,7 @@ class _EditState extends State<Edit> {
   TextEditingController nameController = TextEditingController();
   TextEditingController desController = TextEditingController();
   int i = 0 ;
+  String id = "";
   String title = "" ;
   String description = "" ;
 
@@ -30,10 +31,10 @@ class _EditState extends State<Edit> {
   @override
   void initState() {
     i = widget.index ;
-    nameController.text = TaskData.tasks[i]["name"];
+    id = TaskData.tasks[i]["_id"];
+    nameController.text = TaskData.tasks[i]["title"];
     desController.text = TaskData.tasks[i]["description"];
-    final dateFormat = DateFormat('d MMM yyyy');
-    _selectedDay = dateFormat.parse(TaskData.tasks[i]["date"]);
+    _selectedDay = DateTime.parse(TaskData.tasks[i]["dueDate"]);
     selectedDate = DateFormat('d MMM yyyy').format(_selectedDay!);
     super.initState();
   }
@@ -116,9 +117,18 @@ class _EditState extends State<Edit> {
                 width: MediaQuery.of(context).size.width*0.9,
                 margin: EdgeInsets.symmetric(vertical: 10),
                 child: MaterialButton(
-                  onPressed: ()  {
-                    TaskData().EditTaskData( i, selectedDate, nameController.text, desController.text );
-                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Home()),(route)=>false);
+                  onPressed: ()  async {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => Center(child: CircularProgressIndicator()),
+                    );
+                    await TaskData().editTaskData( id, selectedDate, nameController.text, desController.text );
+                    Navigator.of(context).pop();
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context)=>Home()),
+                            (route) => false,);
                   },
                   minWidth: 100,
                   color: Colors.deepPurple,

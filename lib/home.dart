@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/Task/add_task.dart';
 import 'package:todo_app/componant/data.dart';
-import 'package:todo_app/Task/selectedCard.dart';
-import 'package:todo_app/Task/taskCard.dart';
+import 'package:todo_app/Task/selected_card.dart';
+import 'package:todo_app/Task/task_card.dart';
 import 'package:provider/provider.dart';
 
 
@@ -15,9 +15,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List task = TaskData.tasks;
+  List task =[];
   bool status = false ;
   String formattedDate = DateFormat('EEEE, d MMMM yyyy').format(DateTime.now());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    task = TaskData.tasks;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +42,7 @@ class _HomeState extends State<Home> {
         Consumer<TaskData>(
           builder: (context , notes ,child){
             return
-            SizedBox(
+              SizedBox(
               height: MediaQuery.of(context).size.height,
               child: Stack(
                 children: [
@@ -76,7 +83,7 @@ class _HomeState extends State<Home> {
                                     PopupMenuItem(
                                         onTap: (){
                                           setState(() {
-                                            TaskData.selection = true;
+                                            TaskData.selection = "Completed";
                                             status = true ;
                                           });
                                         },
@@ -98,7 +105,7 @@ class _HomeState extends State<Home> {
                                     PopupMenuItem(
                                         onTap: (){
                                           setState(() {
-                                            TaskData.selection = false;
+                                            TaskData.selection = "Not Started";
                                             status = true ;
                                           });
                                         },

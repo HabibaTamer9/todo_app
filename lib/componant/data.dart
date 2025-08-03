@@ -1,10 +1,13 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class TaskData extends ChangeNotifier{
-  static bool selection = false;
- static List tasks = [
+  String message = "";
+  static String selection = "";
+  static List tasks = [
    {
      "date" : "29 May 2025" ,
      "name" : "Flutter" ,
@@ -25,40 +28,92 @@ class TaskData extends ChangeNotifier{
    },
  ];
 
-  void AddTaskData(String date, String name, String description) {
-    tasks.add(
-      {
-        "date" : date ,
-        "name" : name ,
-        "description" : description,
-        "isComplete" : false
-      }
+  fetchData() async {
+    message = "";
+    var response = await http.get(Uri.parse("https://shrimo.com/fake-api/todos"));
+    var allTask = jsonDecode(response.body);
+    if(response.statusCode==200) {
+      tasks = allTask;
+    }else {
+      message = "error in fetching date";
+    }
+  }
+
+  Future<void> addTaskData(String date, String name, String description) async {
+    message = "";
+    var response = await http.post(
+      Uri.parse('https://shrimo.com/fake-api/todos'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'title': name,
+        'dueDate': date,
+        'description': description,
+        'status': "Not Started",
+        "priority": "High",
+        "tags": ["JavaScript", "Learning"],
+      }),
     );
+    if(response.statusCode != 500) {
+      await fetchData();
+      message = "Success";
+    }else {
+      message = "unsuccessful : ${response.body}";
+    }
     notifyListeners();
   }
 
-  void EditTaskData(int i ,String date, String name, String description) {
-    tasks[i]["name"] = name ;
-    tasks[i]["description"] = description ;
-    tasks[i]["date"] = date ;
+  Future<void> editTaskData(String id ,String date, String name, String description ,[ String isCompleted = "Not Started"]) async {
+    message = "";
+    var response = await http.put(
+      Uri.parse('https://shrimo.com/fake-api/todos/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'title': name,
+        'dueDate': date,
+        'description': description,
+        'status': isCompleted,
+        "priority": "High",
+        "tags": ["JavaScript", "Learning"],
+      }),
+    );
+    if(response.statusCode != 500) {
+      await fetchData();
+      message = "Success";
+    }else {
+      message = "unsuccessful : ${response.body}";
+    }
     notifyListeners();
   }
 
-  Delete(int index){
-    tasks.removeAt(index);
+  delete(String id) async {
+    message = "";
+    var response = await http.delete(
+      Uri.parse('https://shrimo.com/fake-api/todos/$id')
+    );
+    if(response.statusCode != 500) {
+
+      await fetchData();
+      message = "Success";
+    }else {
+      message = "unsuccessful : ${response.body}";
+    }
     notifyListeners();
   }
 
-  sortData(){
-    final dateFormat = DateFormat('d MMM yyyy');
-
+  sortData() {
     tasks.sort((a, b) {
-      DateTime dateA = dateFormat.parse(a['date']);
-      DateTime dateB = dateFormat.parse(b['date']);
+      DateTime dateA = DateTime.parse(a['dueDate']);
+      DateTime dateB = DateTime.parse(b['dueDate']);
 
-      return dateA.compareTo(dateB);
-      // return dateB.compareTo(dateA);
+      return dateA.compareTo(dateB); // تصاعدي
+      // return dateB.compareTo(dateA); // تنازلي
     });
+
     notifyListeners();
   }
 }
+

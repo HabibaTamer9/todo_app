@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_app/componant/data.dart';
 import 'package:todo_app/componant/textfield.dart';
@@ -99,7 +100,7 @@ class _AddTaskState extends State<AddTask> {
 
                 child: Text(
                   selectedDate.isEmpty ? "Select a date ":
-                  "task date is ${selectedDate}",
+                  "task date is $selectedDate",
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.deepPurpleAccent,
@@ -124,7 +125,7 @@ class _AddTaskState extends State<AddTask> {
                 width: MediaQuery.of(context).size.width*0.9,
                 margin: EdgeInsets.symmetric(vertical: 10),
                 child: MaterialButton(
-                  onPressed: ()  {
+                  onPressed: ()  async {
                     if (selectedDate.isEmpty) {
                       showDialog(
                         context: context,
@@ -142,8 +143,21 @@ class _AddTaskState extends State<AddTask> {
                       return;
                     }
                     if (keyForm.currentState!.validate()){
-                    TaskData().AddTaskData(selectedDate, nameController.text, desController.text);
-                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Home()),(route)=>false);
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => Center(child: CircularProgressIndicator()),
+                      );
+                      await TaskData().addTaskData(selectedDate, nameController.text, desController.text);
+
+                      Navigator.of(context).pop();
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => Home()),
+                            (route) => false,
+                      );
+
                    }
                   },
                   minWidth: 100,
