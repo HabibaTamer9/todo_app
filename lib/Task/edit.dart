@@ -123,7 +123,7 @@ class _EditState extends State<Edit> {
                       barrierDismissible: false,
                       builder: (context) => Center(child: CircularProgressIndicator()),
                     );
-                    await TaskData().editTaskData( id, selectedDate, nameController.text, desController.text );
+                    await TaskData().editTaskData( id, selectedDate, nameController.text, desController.text ,TaskData.tasks[i]["status"]);
                     Navigator.of(context).pop();
                     Navigator.pushAndRemoveUntil(
                         context,
