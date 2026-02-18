@@ -30,14 +30,14 @@ Perfect for managing your daily tasks efficiently, offline and without any compl
 
 ## 🖼 Screenshots
 
-*Add your screenshots here. Example:*
+| Splash Screen | Home Screen | Features |
+|---------------|------------|---------|
+| ![Splash Screen](assets/splash_screen.png) | ![Home Screen](assets/home_screen.png) | ![Features](assets/home2.png) |
 
-![Splash Screen](assets/splash_screen.png)
-![Home Screen](assets/home_screen.png)
-![Fetures](assets/home2.png)
-![Edit & Delete](assets/home3.png)
-![Edit Task](assets/edit_task.png)
-![Add Task](assets/add_task.png)
+| Edit & Delete | Edit Task | Add Task |
+|---------------|-----------|---------|
+| ![Edit & Delete](assets/home3.png) | ![Edit Task](assets/edit_task.png) | ![Add Task](assets/add_task.png) |
+
 
 ---
 
