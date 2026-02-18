@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:todo_app/componant/data.dart';
-import 'home.dart';
+import 'features/home_screen/home.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -17,23 +13,13 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     // TODO: implement initState
-    fetchData();
+
     startTimer();
     super.initState();
   }
-  fetchData() async {
-    var response = await http.get(Uri.parse("https://shrimo.com/fake-api/todos"));
-    var tasks = jsonDecode(response.body);
-    if(response.statusCode==200) {
-      TaskData.tasks = tasks;
-    }else {
-      TaskData().message = "error in fetching date";
-    }
-  }
 
   startTimer() async {
-    await fetchData();
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context)=>Home()),

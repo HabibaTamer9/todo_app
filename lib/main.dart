@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/data/tasks_data.dart';
+import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/splash.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(TaskModelAdapter());
+
+  await Hive.openBox<TaskModel>('tasksBox');
+
   runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => TasksData(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +29,6 @@ class MyApp extends StatelessWidget {
       title: 'Todo List',
       debugShowCheckedModeBanner: false,
       home: Splash(),
-
     );
   }
 }
